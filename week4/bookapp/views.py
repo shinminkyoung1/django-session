@@ -68,10 +68,14 @@ class BookReviewListView(APIView):
     
     def post(self, request, id):
         serializer = BookReviewSerializer(data=request.data)
-        book = self.get_book
-
-    
-
+        book = Book.objects.get(id=id)
+        if serializer.is_valid():
+            serializer.save(
+                book=book
+            )
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # from rest_framework.response import Response
 # from rest_framework.decorators import api_view
